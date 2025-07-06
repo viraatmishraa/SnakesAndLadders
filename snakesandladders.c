@@ -1,5 +1,7 @@
 //press alt+z for better readibility (works in vs code)
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 int move(int);
 void printGrid();
 typedef struct playerpos
@@ -11,6 +13,15 @@ char previousA, previousB, nextX, nextY;
 player p1;
 player p2;
 
+
+void printGrid();
+int diceRoll();
+int SkeletalAlgorithm();
+int Snake99_19();
+int Snake66_17();
+int Snake49_31();
+int ladder17_66();
+int ladder06_53();
 // player * p1=NULL;
 // player * p2=NULL;
 
@@ -18,33 +29,33 @@ char grid[31][61]=
 {
 "-------------------------------------------------------------",
 "|100   |M 99|   98|   97|   96|   95|   94|   93|   92|   91|",
-"|     (' ') |     |     |     |     |  X-X|     |     |     |",
-"------X X-------------------------------X-X------------------",
-"| 81  /0/ 82|   83|   84|   85|   86|  84X-X  88|   89|   90|",
-"|     X X   |     |     |     |     |     X-X   |     |     |",
-"------/0/----------------------------------X-X---------------",
-"| 80  X X 79|   78|   77|   76|   75|  74 | X-X |   72|   71|",
+"|     (' ') |     |     |     |     |  \\-\\|     |     |     |",
+"------\\ \\-------------------------------\\-\\------------------",
+"| 81  /0/ 82|   83|   84|   85|   86|  84\\-\\  88|   89|   90|",
+"|     \\ \\   |     |     |     |     |     \\-\\   |     |     |",
+"------/0/----------------------------------\\-\\---------------",
+"| 80  \\ \\ 79|   78|   77|   76|   75|  74 | \\-\\ |   72|   71|",
 "|     /0/   |     |     |     |     |     | 73  |     |     |",
-"----- X X ---------------------------------------------------",
+"----- \\ \\ ---------------------------------------------------",
 "| 61  /0/ 62|   63|   64|   65|   66|   67|   68|   69|   70|",
-"|     X X   |   X-X     |     |  M  |     |     |     |     |",
-"------/0/--------X-X-----------(^ ^)-------------------------",
-"| 60  X X 59|   58X-X57 |   56|/ /  |   54| 53  |   52|   51|",
-"|     /0/   |     |X-X  |     ( ) 55|     |  /-/|     |     |",
-"------X X-----------X-X------/ /------------/-/--------------",
-"| 41  /0/ 42|   43|  X-X|45 ( )   46|   47|/-/48|49  M|   50|",
-"|     X X   |     | 44X-X  / /|     |     /-/   |  [' ']    |",
-"------/0/--------------X-X( )------------/-/--------X X------",
-"| 40  X X 39|   38|   37X/ /36|   35| 34/-/   33|  32X X  31|",
-"|     /0/   |     |     ( )X  |     |  /-/|     |     X     |",
-"------X X--------------/ /X-X---------/-/--------------------",
-"| 21  /0/ 22|   23| 22( )  X-X|   26|/-/27|   28|   29|   30|",
-"|     X X   |     |  / /|   25|     /-/   |     |     |     |",
+"|     \\ \\   |   \\-\\     |     |  M  |     |     |     |     |",
+"------/0/--------\\-\\-----------(^ ^)-------------------------",
+"| 60  \\ \\ 59|   58\\-\\57 |   56|/ /  |   54| 53  |   52|   51|",
+"|     /0/   |     |\\-\\  |     ( ) 55|     |  /-/|     |     |",
+"------\\ \\-----------\\-\\------/ /------------/-/--------------",
+"| 41  /0/ 42|   43|  \\-\\|45 ( )   46|   47|/-/48|49  M|   50|",
+"|     \\ \\   |     | 44\\-\\  / /|     |     /-/   |  [' ']    |",
+"------/0/--------------\\-\\( )------------/-/--------\\ \\------",
+"| 40  \\ \\ 39|   38|   37\\/ /36|   35| 34/-/   33|  32\\ \\  31|",
+"|     /0/   |     |     ( )\\  |     |  /-/|     |     \\     |",
+"------\\ \\--------------/ /\\-\\---------/-/--------------------",
+"| 21  /0/ 22|   23| 22( )  \\-\\|   26|/-/27|   28|   29|   30|",
+"|     \\ \\   |     |  / /|   25|     /-/   |     |     |     |",
 "------/0/-----------( )------------/-/-----------------------",
-"| 20  X X 19|   18|   17|   16|   /-/   14|   13|   12|   11|",
-"|     |     |     |     |     |15   |     |     |     |     |",
-"-------------------------------------------------------------",
-"|    1|    2|    3|    4|    5|    6|    7|    8|    9|   10|",
+"| 20  \\ \\ 19|   18|   17|   16|15 /-/   14|   13|   12|   11|",
+"|     |     |     |     |     |  /-/|     |     |     |     |",
+"--------------------------------/-/--------------------------",
+"|    1|    2|    3|    4|    5|/-/ 6|    7|    8|    9|   10|",
 "|p1 p2|     |     |     |     |     |     |     |     |     |",
 "-------------------------------------------------------------"
 };
@@ -54,13 +65,13 @@ int main()
 {
 p1.x=1;
 p1.y=29;
-p1.previousA=" ";
-p1.previousB=" ";
+p1.previousA=' ';//common mistake: string written in place of a character 
+p1.previousB=' ';
 p2.x=4;
 p2.y=29;
-p2.previousA=" ";
-p2.previousB=" ";
-
+p2.previousA=' ';
+p2.previousB=' ';
+SkeletalAlgorithm();
 }
 
 
@@ -96,7 +107,7 @@ if(player==1)
         printGrid();
         
         //return
-        return;
+        return 1;
         }
     else//(/*we want to change x cause pointer in betweeen 1 and 10*/)
         {
@@ -123,11 +134,13 @@ if(player==1)
         printGrid();
         
         //return
-        return;
+        return 1;
         }
     }
 else 
-if(player==2)
+
+//optimization idea- make a pointer to the structure and instead of writing the code 2 times just assing p1 or p2 to the struct and go on with a common variable
+if(player==-1)// this line executes algo for player two when the flag is -1, which means it will be flippable
     if(p2.position%10==0/*we want to change y,  cause pointer at 10 or 1*/)
         {
         // we will change the x-coordinate modification symbol by multiplying -1 to the mod-er
@@ -155,7 +168,7 @@ if(player==2)
         printGrid();
         
         //return
-        return;
+        return 1;
         }
     else//(/*we want to change x cause pointer in betweeen 1 and 10*/)
         {
@@ -182,6 +195,106 @@ if(player==2)
         printGrid();
         
         //return
-        return;
+        return 1;
         }
     }
+
+int SkeletalAlgorithm()
+{
+    printf("press enter to start");
+    while(p1.position<=99||p2.position<=99)
+    {
+    getchar();
+    printGrid();
+    int playerFlag=1;
+    int dieResult=diceRoll();
+  
+    if(dieResult==6)
+    {
+
+        move(playerFlag),move(playerFlag),move(playerFlag),
+        move(playerFlag),move(playerFlag),move(playerFlag);
+        continue;
+
+    }
+    else//possible bug site
+    {
+        move(playerFlag);
+        playerFlag*=-1;
+        continue;
+    }
+}
+
+}
+/* 
+this from project snake:
+
+int printMatrix() {
+    // usleep(1000000);
+
+  for (int i = 0; i < 16; i++) {
+    for (int j = 0; j < 32; j++) {
+      printf("%c ", grid[i][j]);
+    }
+    printf("\n");
+  }
+  printf("          ****your current score=%d*****", len);
+}
+
+Has been modified to :
+*/
+
+void printGrid() 
+{
+    printf("\033[H");
+  for (int i = 0; i < 31; i++) {
+    for (int j = 0; j < 61; j++) {
+      printf("%c", grid[i][j]);
+    }
+    printf("\n");
+  }
+}
+
+
+/* this from project snake:
+
+int createRand(int num) {
+  int random;
+  if (first_c == 'w') {
+    srand(time(NULL));
+
+    random = rand();
+    random = (random % num) + 1;
+  } // srand is basically feeding a seed value to the pseudo
+  // // random function rand() on the basis of time
+  else if (first_c == 'a') {
+    n++;
+    srand(len + n);
+  }
+  //   ///this line makes this version of snake , speedrunable, as its
+  //   predictable with exactlty same pattern everytime
+
+  random = rand();
+  random = (random % num) + 1;
+
+  return random;
+}
+has been modified to:*/
+
+
+
+int diceRoll() 
+{
+    
+    srand(time(NULL));
+
+    int random = rand();
+    random = (random % 6) + 1;
+   // srand is basically feeding a seed value to the pseudo
+   // random function rand() on the basis of time
+
+
+  return random;
+}
+
+

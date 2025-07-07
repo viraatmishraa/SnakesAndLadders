@@ -15,7 +15,7 @@ player p2;
 
 
 void printGrid();
-int diceRoll();
+int diceRoll();//requires stdlib and time
 int SkeletalAlgorithm();
 int Snake99_19();
 int Snake66_17();
@@ -63,12 +63,13 @@ int moder=1;
 
 int main()
 {
-p1.x=1;
-p1.y=29;
+p1.position=1;
+p1.x=29;
+p1.y=1;
 p1.previousA=' ';//common mistake: string written in place of a character 
 p1.previousB=' ';
-p2.x=4;
-p2.y=29;
+p2.x=29;
+p2.y=4;
 p2.previousA=' ';
 p2.previousB=' ';
 SkeletalAlgorithm();
@@ -86,19 +87,19 @@ if(player==1)
         moder*=-1;
        
         // we want to unprint from last location i.e position before modification
-        grid[p1.x][p1.y]=p1.previousA;
-        grid[p1.x+1][p1.y]=p1.previousB;
+        grid[p1.x][p1.y]=p1.previousA; // y is horizontal movement)
+        grid[p1.x][p1.y+1]=p1.previousB;
        
         // we will move y one up (y-3 in this case),
-        p1.y=p1.y+3;
+        p1.x=p1.x-3;
         
         // we want to store what is in the next block in the previous A & B of the structure
-        p1.previousA=grid[p1.x][p1.y];
-        p1.previousB=grid[p1.x+1][p1.y];
+        p1.previousA=grid[p1.x-3][p1.y];   //
+        p1.previousB=grid[p1.x-3][p1.y];   //
         
         // we want to print to mod location, moving player 1
         grid[p1.x][p1.y]='p';
-        grid[p1.x+1][p1.y]='1';
+        grid[p1.x][p1.y+1]='1';
         
         //updating postion
         p1.position++;
@@ -114,18 +115,18 @@ if(player==1)
             
         // we want to unprint from last location i.e position before modification
         grid[p1.x][p1.y]=p1.previousA;
-        grid[p1.x+1][p1.y]=p1.previousB;
+        grid[p1.x][p1.y+1]=p1.previousB;
             
         //we will x+(mod_er) ((x+mode_er)*6 in this case)
-        p1.x=p1.x+(moder*6);// this line decides the direction of insertion for' p1' and updates x coordinate accordingly
+        p1.y=p1.y+(moder*6);// this line decides the direction of insertion for' p1' and updates x coordinate accordingly
             
         // we want to store what is in the next block in the previous A & B of the structure
         p1.previousA=grid[p1.x][p1.y];
-        p1.previousB=grid[p1.x+1][p1.y];
+        p1.previousB=grid[p1.x][p1.y+1];
         
         // we want to print to mod location, moving player 1
         grid[p1.x][p1.y]='p';
-        grid[p1.x+1][p1.y]='1';
+        grid[p1.x][p1.y+1]='1';
 
         //updating postion
         p1.position++;
@@ -147,19 +148,19 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
         moder*=-1;
        
         // we want to unprint from last location i.e position before modification
-        grid[p2.x][p2.y]=p2.previousA;
-        grid[p2.x+1][p2.y]=p2.previousB;
+        grid[p2.x][p2.y-3]=p2.previousA;
+        grid[p2.x][p2.y-3]=p2.previousB;
        
         // we will move y one up (y-3 in this case),
-        p2.y=p2.y+3;
+        p2.y=p2.y-3;
         
         // we want to store what is in the next block in the previous A & B of the structure
         p2.previousA=grid[p2.x][p2.y];
-        p2.previousB=grid[p2.x+1][p2.y];
+        p2.previousB=grid[p2.x][p2.y+1];
         
         // we want to print to mod location, moving player 1
-        grid[p2.x][p2.y]='p';
-        grid[p2.x+1][p2.y]='1';
+        grid[p2.x][p2.y-1]='p';
+        grid[p2.x][p2.y-1]='1';
         
         //updating postion
         p2.position++;
@@ -175,18 +176,18 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
             
         // we want to unprint from last location i.e position before modification
         grid[p2.x][p2.y]=p2.previousA;
-        grid[p2.x+1][p2.y]=p2.previousB;
+        grid[p2.x][p2.y+1]=p2.previousB;
             
         //we will x+(mod_er) ((x+mode_er)*6 in this case)
-        p2.x=p2.x+(moder*6);// this line decides the direction of insertion for' p2' and updates x coordinate accordingly
+        p2.y=p2.y+(moder*6);// this line decides the direction of insertion for' p2' and updates x coordinate accordingly
             
         // we want to store what is in the next block in the previous A & B of the structure
         p2.previousA=grid[p2.x][p2.y];
-        p2.previousB=grid[p2.x+1][p2.y];
+        p2.previousB=grid[p2.x][p2.y+1];
         
         // we want to print to mod location, moving player 1
         grid[p2.x][p2.y]='p';
-        grid[p2.x+1][p2.y]='1';
+        grid[p2.x][p2.y+1]='1';
 
         //updating postion
         p2.position++;
@@ -211,9 +212,9 @@ int SkeletalAlgorithm()
   
     if(dieResult==6)
     {
-
-        move(playerFlag),move(playerFlag),move(playerFlag),
-        move(playerFlag),move(playerFlag),move(playerFlag);
+      move(playerFlag);
+        // move(playerFlag),move(playerFlag),move(playerFlag),
+        // move(playerFlag),move(playerFlag),move(playerFlag);
         continue;
 
     }

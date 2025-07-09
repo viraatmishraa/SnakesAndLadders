@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 int move(int);
 void printGrid();
 typedef struct playerpos
@@ -21,7 +22,7 @@ int Snake99_19();
 int Snake66_17();
 int Snake49_31();
 int ladder17_66();
-int ladder06_53();
+int ladder06_53(),playerFlag=1;
 // player * p1=NULL;
 // player * p2=NULL;
 
@@ -53,17 +54,18 @@ char grid[31][61]=
 "|     \\ \\   |     |  / /|   25|     /-/   |     |     |     |",
 "------/0/-----------( )------------/-/-----------------------",
 "| 20  \\ \\ 19|   18|   17|   16|15 /-/   14|   13|   12|   11|",
-"|     |     |     |     |     |  /-/|     |     |     |     |",
+"|     |     |     |     |     |  /-/|LLLLL|YYYYY|     |upper|",
 "--------------------------------/-/--------------------------",
 "|    1|    2|    3|    4|    5|/-/ 6|    7|    8|    9|   10|",
-"|p1 p2|     |     |     |     |     |     |     |     |     |",
+"|p1 p2|xxxxx|yyyyy|zzzzz|hhhhh|jjjjj|     |     |     |lower|",
 "-------------------------------------------------------------"
 };
-int moder=1;
+int moderP1=1,moderP2=1;
 
 int main()
 {
 p1.position=1;
+p2.position=1;
 p1.x=29;
 p1.y=1;
 p1.previousA=' ';//common mistake: string written in place of a character 
@@ -84,18 +86,18 @@ if(player==1)
     if(p1.position%10==0/*we want to change y,  cause pointer at 10 or 1*/)
         {
         // we will change the x-coordinate modification symbol by multiplying -1 to the mod-er
-        moder*=-1;
+        moderP1*=-1;
        
         // we want to unprint from last location i.e position before modification
         grid[p1.x][p1.y]=p1.previousA; // y is horizontal movement)
         grid[p1.x][p1.y+1]=p1.previousB;
-       
         // we will move y one up (y-3 in this case),
         p1.x=p1.x-3;
         
         // we want to store what is in the next block in the previous A & B of the structure
         p1.previousA=grid[p1.x-3][p1.y];   //
-        p1.previousB=grid[p1.x-3][p1.y];   //
+        p1.previousB=grid[p1.x-3][p1.y+1];   //
+       
         
         // we want to print to mod location, moving player 1
         grid[p1.x][p1.y]='p';
@@ -116,13 +118,13 @@ if(player==1)
         // we want to unprint from last location i.e position before modification
         grid[p1.x][p1.y]=p1.previousA;
         grid[p1.x][p1.y+1]=p1.previousB;
+        
+    // we want to store what is in the next block in the previous A & B of the structure
+    p1.previousA=grid[p1.x][p1.y+(moderP1*6)];
+    p1.previousB=grid[p1.x][(p1.y+(moderP1*6))+1];
             
         //we will x+(mod_er) ((x+mode_er)*6 in this case)
-        p1.y=p1.y+(moder*6);// this line decides the direction of insertion for' p1' and updates x coordinate accordingly
-            
-        // we want to store what is in the next block in the previous A & B of the structure
-        p1.previousA=grid[p1.x][p1.y];
-        p1.previousB=grid[p1.x][p1.y+1];
+        p1.y=p1.y+(moderP1*6);// this line decides the direction of insertion for' p1' and updates x coordinate accordingly
         
         // we want to print to mod location, moving player 1
         grid[p1.x][p1.y]='p';
@@ -134,34 +136,46 @@ if(player==1)
         //we will update the grid
         printGrid();
         
+        
         //return
         return 1;
         }
     }
 else 
+{
+  ////
+
+
+
+
+
+
+
+
 
 //optimization idea- make a pointer to the structure and instead of writing the code 2 times just assing p1 or p2 to the struct and go on with a common variable
 if(player==-1)// this line executes algo for player two when the flag is -1, which means it will be flippable
     if(p2.position%10==0/*we want to change y,  cause pointer at 10 or 1*/)
         {
         // we will change the x-coordinate modification symbol by multiplying -1 to the mod-er
-        moder*=-1;
+        moderP2*=-1;
        
         // we want to unprint from last location i.e position before modification
-        grid[p2.x][p2.y-3]=p2.previousA;
-        grid[p2.x][p2.y-3]=p2.previousB;
+        grid[p2.x][p2.y]=p2.previousA;
+        grid[p2.x][p2.y+1]=p2.previousB;
        
+        
         // we will move y one up (y-3 in this case),
-        p2.y=p2.y-3;
+        p2.x=p2.x-3;
         
         // we want to store what is in the next block in the previous A & B of the structure
         p2.previousA=grid[p2.x][p2.y];
         p2.previousB=grid[p2.x][p2.y+1];
-        
+
         // we want to print to mod location, moving player 1
-        grid[p2.x][p2.y-1]='p';
-        grid[p2.x][p2.y-1]='1';
-        
+        grid[p2.x][p2.y]='p';
+        grid[p2.x][p2.y+1]='2';
+      
         //updating postion
         p2.position++;
 
@@ -177,17 +191,18 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
         // we want to unprint from last location i.e position before modification
         grid[p2.x][p2.y]=p2.previousA;
         grid[p2.x][p2.y+1]=p2.previousB;
+        
+        // we want to store what is in the next block in the previous A & B of the structure
+        p2.previousA=grid[p2.x][p2.y+(moderP2*6)];
+        p2.previousB=grid[p2.x][(p2.y+(moderP2*6))+1];
             
         //we will x+(mod_er) ((x+mode_er)*6 in this case)
-        p2.y=p2.y+(moder*6);// this line decides the direction of insertion for' p2' and updates x coordinate accordingly
+        p2.y=p2.y+(moderP2*6);// this line decides the direction of insertion for' p2' and updates x coordinate accordingly
             
-        // we want to store what is in the next block in the previous A & B of the structure
-        p2.previousA=grid[p2.x][p2.y];
-        p2.previousB=grid[p2.x][p2.y+1];
         
         // we want to print to mod location, moving player 1
         grid[p2.x][p2.y]='p';
-        grid[p2.x][p2.y+1]='1';
+        grid[p2.x][p2.y+1]='2';
 
         //updating postion
         p2.position++;
@@ -198,34 +213,67 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
         //return
         return 1;
         }
-    }
+    }}
 
-int SkeletalAlgorithm()
-{
-    printf("press enter to start");
-    while(p1.position<=99||p2.position<=99)
-    {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int SkeletalAlgorithm() {
+  printf("press enter to start");
+  while (p1.position <= 99 || p2.position <= 99) {
     getchar();
     printGrid();
-    int playerFlag=1;
-    int dieResult=diceRoll();
-  
-    if(dieResult==6)
-    {
-      move(playerFlag);
-        // move(playerFlag),move(playerFlag),move(playerFlag),
-        // move(playerFlag),move(playerFlag),move(playerFlag);
-        continue;
+    int dieResult = diceRoll();
 
-    }
-    else//possible bug site
+    if (dieResult == 6) {
+      // move(playerFlag);
+      move(playerFlag), move(playerFlag), move(playerFlag), move(playerFlag),
+          move(playerFlag), move(playerFlag);
+      continue;
+
+    } else // possible bug site
     {
+      if (dieResult == 1)
         move(playerFlag);
-        playerFlag*=-1;
-        continue;
+      if (dieResult == 2) {
+        move(playerFlag);
+        move(playerFlag);
+      }
+      if (dieResult == 3) {
+        move(playerFlag);
+        move(playerFlag);
+        move(playerFlag);
+      }
+      if (dieResult == 4) {
+        move(playerFlag);
+        move(playerFlag);
+        move(playerFlag);
+        move(playerFlag);
+      }
+      if (dieResult == 5) {
+        move(playerFlag);
+        move(playerFlag);
+        move(playerFlag);
+        move(playerFlag);
+        move(playerFlag);
+      }
+      playerFlag *= -1;
     }
-}
-
+  }
 }
 /* 
 this from project snake:
@@ -247,6 +295,7 @@ Has been modified to :
 
 void printGrid() 
 {
+  usleep(50000);
     printf("\033[H");
   for (int i = 0; i < 31; i++) {
     for (int j = 0; j < 61; j++) {
@@ -293,9 +342,8 @@ int diceRoll()
     random = (random % 6) + 1;
    // srand is basically feeding a seed value to the pseudo
    // random function rand() on the basis of time
+  
 
 
   return random;
 }
-
-

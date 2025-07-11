@@ -3,17 +3,19 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-int move(int);
+int move(int,int);
 void printGrid();
 typedef struct playerpos
 {
 int x,y,position;
-char previousA, previousB, nextX, nextY;
+char previousA, previousB;
 
 }player;
 player p1;
 player p2;
 
+
+int animate(int direction,player p);
 
 void printGrid();
 int diceRoll();//requires stdlib and time
@@ -21,16 +23,19 @@ int SkeletalAlgorithm();
 int Snake99_19();
 int Snake66_17();
 int Snake49_31();
-int ladder17_66();
-int ladder06_53(),playerFlag=1;
+int Ladder73_94();
+int Ladder25_63();
+int Ladder6_53(),playerFlag=1;
+int snakeandladdercheck(player*);
+
 // player * p1=NULL;
 // player * p2=NULL;
 
 char grid[31][61]=
 {
 "-------------------------------------------------------------",
-"|100   |M 99|   98|   97|   96|   95|   94|   93|   92|   91|",
-"|     (' ') |     |     |     |     |  \\-\\|     |     |     |",
+"|100  |M  99|   98|   97|   96|   95|   94|   93|   92|   91|",
+"|    (' ')  |     |     |     |     |  \\-\\|     |     |     |",
 "------\\ \\-------------------------------\\-\\------------------",
 "| 81  /0/ 82|   83|   84|   85|   86|  84\\-\\  88|   89|   90|",
 "|     \\ \\   |     |     |     |     |     \\-\\   |     |     |",
@@ -54,24 +59,25 @@ char grid[31][61]=
 "|     \\ \\   |     |  / /|   25|     /-/   |     |     |     |",
 "------/0/-----------( )------------/-/-----------------------",
 "| 20  \\ \\ 19|   18|   17|   16|15 /-/   14|   13|   12|   11|",
-"|     |     |     |     |     |  /-/|LLLLL|YYYYY|     |upper|",
+"|     |     |     |     |     |  /-/|     |     |     |     |",
 "--------------------------------/-/--------------------------",
 "|    1|    2|    3|    4|    5|/-/ 6|    7|    8|    9|   10|",
-"|p1 p2|xxxxx|yyyyy|zzzzz|hhhhh|jjjjj|     |     |     |lower|",
+"|p1 p2|     |     |     |     |     |     |     |     |     |",
 "-------------------------------------------------------------"
 };
 int moderP1=1,moderP2=1;
+int dieResult=1;
 
 int main()
 {
 p1.position=1;
 p2.position=1;
-p1.x=29;
-p1.y=1;
+p1.y=29;
+p1.x=1;
 p1.previousA=' ';//common mistake: string written in place of a character 
 p1.previousB=' ';
-p2.x=29;
-p2.y=4;
+p2.y=29;
+p2.x=4;
 p2.previousA=' ';
 p2.previousB=' ';
 SkeletalAlgorithm();
@@ -79,7 +85,7 @@ SkeletalAlgorithm();
 
 
 //instead of calling movement function once, and no. of steps as a parameter, i will call movement function n times which intern help me to reduce work for animation and also makes the alternating row direction problem a lot simple
-int move(int player)
+int move(int player,int dodgeSnLflag)
 {
 if(player==1)
     {
@@ -89,46 +95,46 @@ if(player==1)
         moderP1*=-1;
        
         // we want to unprint from last location i.e position before modification
-        grid[p1.x][p1.y]=p1.previousA; // y is horizontal movement)
-        grid[p1.x][p1.y+1]=p1.previousB;
+        grid[p1.y][p1.x]=p1.previousA; // y is horizontal movement)
+        grid[p1.y][p1.x+1]=p1.previousB;
         // we will move y one up (y-3 in this case),
-        p1.x=p1.x-3;
+        p1.y=p1.y-3;
         
         // we want to store what is in the next block in the previous A & B of the structure
-        p1.previousA=grid[p1.x-3][p1.y];   //
-        p1.previousB=grid[p1.x-3][p1.y+1];   //
+        p1.previousA=grid[p1.y-3][p1.x];   //
+        p1.previousB=grid[p1.y-3][p1.x+1];   //
        
         
         // we want to print to mod location, moving player 1
-        grid[p1.x][p1.y]='p';
-        grid[p1.x][p1.y+1]='1';
+        grid[p1.y][p1.x]='p';
+        grid[p1.y][p1.x+1]='1';
         
         //updating postion
         p1.position++;
 
         //we will update the grid
         printGrid();
-        
         //return
+        snakeandladdercheck(&p1);
         return 1;
         }
     else//(/*we want to change x cause pointer in betweeen 1 and 10*/)
         {
             
         // we want to unprint from last location i.e position before modification
-        grid[p1.x][p1.y]=p1.previousA;
-        grid[p1.x][p1.y+1]=p1.previousB;
+        grid[p1.y][p1.x]=p1.previousA;
+        grid[p1.y][p1.x+1]=p1.previousB;
         
     // we want to store what is in the next block in the previous A & B of the structure
-    p1.previousA=grid[p1.x][p1.y+(moderP1*6)];
-    p1.previousB=grid[p1.x][(p1.y+(moderP1*6))+1];
+    p1.previousA=grid[p1.y][p1.x+(moderP1*6)];
+    p1.previousB=grid[p1.y][(p1.x+(moderP1*6))+1];
             
         //we will x+(mod_er) ((x+mode_er)*6 in this case)
-        p1.y=p1.y+(moderP1*6);// this line decides the direction of insertion for' p1' and updates x coordinate accordingly
+        p1.x=p1.x+(moderP1*6);// this line decides the direction of insertion for' p1' and updates x coordinate accordingly
         
         // we want to print to mod location, moving player 1
-        grid[p1.x][p1.y]='p';
-        grid[p1.x][p1.y+1]='1';
+        grid[p1.y][p1.x]='p';
+        grid[p1.y][p1.x+1]='1';
 
         //updating postion
         p1.position++;
@@ -138,9 +144,10 @@ if(player==1)
         
         
         //return
+        if(dodgeSnLflag=1)
+        snakeandladdercheck(&p1);
         return 1;
-        }
-    }
+        }}
 else 
 {
   ////
@@ -161,20 +168,20 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
         moderP2*=-1;
        
         // we want to unprint from last location i.e position before modification
-        grid[p2.x][p2.y]=p2.previousA;
-        grid[p2.x][p2.y+1]=p2.previousB;
+        grid[p2.y][p2.x]=p2.previousA;
+        grid[p2.y][p2.x+1]=p2.previousB;
        
         
         // we will move y one up (y-3 in this case),
-        p2.x=p2.x-3;
+        p2.y=p2.y-3;
         
         // we want to store what is in the next block in the previous A & B of the structure
-        p2.previousA=grid[p2.x][p2.y];
-        p2.previousB=grid[p2.x][p2.y+1];
+        p2.previousA=grid[p2.y][p2.x];
+        p2.previousB=grid[p2.y][p2.x+1];
 
         // we want to print to mod location, moving player 1
-        grid[p2.x][p2.y]='p';
-        grid[p2.x][p2.y+1]='2';
+        grid[p2.y][p2.x]='p';
+        grid[p2.y][p2.x+1]='2';
       
         //updating postion
         p2.position++;
@@ -189,20 +196,20 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
         {
             
         // we want to unprint from last location i.e position before modification
-        grid[p2.x][p2.y]=p2.previousA;
-        grid[p2.x][p2.y+1]=p2.previousB;
+        grid[p2.y][p2.x]=p2.previousA;
+        grid[p2.y][p2.x+1]=p2.previousB;
         
         // we want to store what is in the next block in the previous A & B of the structure
-        p2.previousA=grid[p2.x][p2.y+(moderP2*6)];
-        p2.previousB=grid[p2.x][(p2.y+(moderP2*6))+1];
+        p2.previousA=grid[p2.y][p2.x+(moderP2*6)];
+        p2.previousB=grid[p2.y][(p2.x+(moderP2*6))+1];
             
         //we will x+(mod_er) ((x+mode_er)*6 in this case)
-        p2.y=p2.y+(moderP2*6);// this line decides the direction of insertion for' p2' and updates x coordinate accordingly
+        p2.x=p2.x+(moderP2*6);// this line decides the direction of insertion for' p2' and updates x coordinate accordingly
             
         
         // we want to print to mod location, moving player 1
-        grid[p2.x][p2.y]='p';
-        grid[p2.x][p2.y+1]='2';
+        grid[p2.y][p2.x]='p';
+        grid[p2.y][p2.x+1]='2';
 
         //updating postion
         p2.position++;
@@ -218,58 +225,46 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int SkeletalAlgorithm() {
   printf("press enter to start");
   while (p1.position <= 99 || p2.position <= 99) {
     getchar();
     printGrid();
-    int dieResult = diceRoll();
-
+    // int dieResult = diceRoll();
     if (dieResult == 6) {
       // move(playerFlag);
-      move(playerFlag), move(playerFlag), move(playerFlag), move(playerFlag),
-          move(playerFlag), move(playerFlag);
+      move(playerFlag,0), move(playerFlag,0), move(playerFlag,0), move(playerFlag,0),
+          move(playerFlag,0), move(playerFlag,1);
       continue;
+      
+      
 
-    } else // possible bug site
+
+    } else 
     {
       if (dieResult == 1)
-        move(playerFlag);
+        move(playerFlag,1);
       if (dieResult == 2) {
-        move(playerFlag);
-        move(playerFlag);
+        move(playerFlag,0);
+        move(playerFlag,1);
       }
       if (dieResult == 3) {
-        move(playerFlag);
-        move(playerFlag);
-        move(playerFlag);
+        move(playerFlag,0);
+        move(playerFlag,0);
+        move(playerFlag,1);
       }
       if (dieResult == 4) {
-        move(playerFlag);
-        move(playerFlag);
-        move(playerFlag);
-        move(playerFlag);
+        move(playerFlag,0);
+        move(playerFlag,0);
+        move(playerFlag,0);
+        move(playerFlag,1);
       }
       if (dieResult == 5) {
-        move(playerFlag);
-        move(playerFlag);
-        move(playerFlag);
-        move(playerFlag);
-        move(playerFlag);
+        move(playerFlag,0);
+        move(playerFlag,0);
+        move(playerFlag,0);
+        move(playerFlag,0);
+        move(playerFlag,1);
       }
       playerFlag *= -1;
     }
@@ -295,7 +290,7 @@ Has been modified to :
 
 void printGrid() 
 {
-  usleep(50000);
+  // usleep(100000);
     printf("\033[H");
   for (int i = 0; i < 31; i++) {
     for (int j = 0; j < 61; j++) {
@@ -347,3 +342,104 @@ int diceRoll()
 
   return random;
 }
+
+int snakeandladdercheck(player *p)
+{
+// if(p->position==99)
+// Snake99_19(p);
+// if(p->position==66)
+// Snake66_17(p);
+if(p->position==49)
+Snake49_31(p);
+if(p->position==73)
+Ladder73_94(p);
+if(p->position==25)
+Ladder25_63(p);
+if(p->position==6)
+Ladder6_53(p);
+}
+
+
+int Snake99_19(player *p)//straight down x7 y2=> x7 y26
+{
+  
+for(int i=0;i<=23;i++)
+{
+  char next=grid[1+p->y][p->x];
+  grid[++p->y][p->x]='p';
+  grid[p->y-1][p->x]=next;
+
+printGrid();
+}
+char temp=grid[2][8];
+p->position=19;
+p->x=7;
+p->y=26;
+grid[26][7]='p';
+}
+
+
+
+int Snake66_17(player *p)// down and left
+{
+ p->x=p->x+3;
+for(int i=0;i<13;i++)
+{
+  grid[++p->y][--p->x]='p';
+  grid[p->y-1][p->x+1]=' ';
+
+printGrid();
+}
+p->position=17;
+p->x=19;
+p->y=26;
+grid[26][19]='p';
+moderP1*=-1;//will have to know the payer else this will fail
+
+}
+
+int Snake49_31(player *p)// down and right
+{
+ p->x=p->x+3;
+
+for(int i=0;i<3;i++)
+{
+  grid[++p->y][++p->x]='p';
+  grid[p->y-1][p->x-1]=' ';
+
+printGrid();
+}
+p->position=31;
+p->x=55;
+p->y=20;
+grid[20][55]='p';
+moderP1*=-1;
+
+
+}
+int Ladder73_94()// up and left
+{
+for(int i=0;i<6;i++)
+{
+
+}
+}
+int Ladder25_63()// up and left
+{
+  for(int i=0;i<12;i++)
+{
+
+}
+
+}
+int Ladder6_53()// up and right
+{
+for(int i=0;i<15;i++)
+{
+
+}
+}
+
+
+int animate(int direction,player p)
+{}

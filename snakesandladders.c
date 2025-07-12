@@ -15,8 +15,11 @@ player p1;
 player p2;
 
 
-int animate(int direction,player p);
-
+void clear (void)
+{
+    while ( getchar() != '\n' );
+}
+void printDieClear(FILE *);
 void printGrid();
 int diceRoll();//requires stdlib and time
 int SkeletalAlgorithm();
@@ -26,6 +29,8 @@ int Snake49_31();
 int Ladder73_94();
 int Ladder25_63();
 int Ladder6_53(),playerFlag=1;
+int animation(int);
+void printDie(FILE *);
 int snakeandladdercheck(player*);
 
 // player * p1=NULL;
@@ -40,8 +45,8 @@ char grid[31][61]=
 "| 81  /0/ 82|   83|   84|   85|   86|  84\\-\\  88|   89|   90|",
 "|     \\ \\   |     |     |     |     |     \\-\\   |     |     |",
 "------/0/----------------------------------\\-\\---------------",
-"| 80  \\ \\ 79|   78|   77|   76|   75|  74 | \\-\\ |   72|   71|",
-"|     /0/   |     |     |     |     |     | 73  |     |     |",
+"| 80  \\ \\ 79|   78|   77|   76|   75|  74 | \\-73|   72|   71|",
+"|     /0/   |     |     |     |     |     |     |     |     |",
 "----- \\ \\ ---------------------------------------------------",
 "| 61  /0/ 62|   63|   64|   65|   66|   67|   68|   69|   70|",
 "|     \\ \\   |   \\-\\     |     |  M  |     |     |     |     |",
@@ -55,8 +60,8 @@ char grid[31][61]=
 "| 40  \\ \\ 39|   38|   37\\/ /36|   35| 34/-/   33|  32\\ \\  31|",
 "|     /0/   |     |     ( )\\  |     |  /-/|     |     \\     |",
 "------\\ \\--------------/ /\\-\\---------/-/--------------------",
-"| 21  /0/ 22|   23| 22( )  \\-\\|   26|/-/27|   28|   29|   30|",
-"|     \\ \\   |     |  / /|   25|     /-/   |     |     |     |",
+"| 21  /0/ 22|   23| 22( )25\\-\\|   26|/-/27|   28|   29|   30|",
+"|     \\ \\   |     |  / /|     |     /-/   |     |     |     |",
 "------/0/-----------( )------------/-/-----------------------",
 "| 20  \\ \\ 19|   18|   17|   16|15 /-/   14|   13|   12|   11|",
 "|     |     |     |     |     |  /-/|     |     |     |     |",
@@ -228,9 +233,14 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
 int SkeletalAlgorithm() {
   printf("press enter to start");
   while (p1.position <= 99 || p2.position <= 99) {
-    getchar();
+    clear();
     printGrid();
-    // int dieResult = diceRoll();
+    int dieResult = diceRoll();
+    animation(dieResult);
+
+
+
+
     if (dieResult == 6) {
       // move(playerFlag);
       move(playerFlag,0), move(playerFlag,0), move(playerFlag,0), move(playerFlag,0),
@@ -290,7 +300,7 @@ Has been modified to :
 
 void printGrid() 
 {
-  // usleep(100000);
+  usleep(100000);
     printf("\033[H");
   for (int i = 0; i < 31; i++) {
     for (int j = 0; j < 61; j++) {
@@ -300,6 +310,17 @@ void printGrid()
   }
 }
 
+
+void printGridFaster() 
+{
+    printf("\033[H");
+  for (int i = 0; i < 31; i++) {
+    for (int j = 0; j < 61; j++) {
+      printf("%c", grid[i][j]);
+    }
+    printf("\n");
+  }
+}
 
 /* this from project snake:
 
@@ -345,10 +366,10 @@ int diceRoll()
 
 int snakeandladdercheck(player *p)
 {
-// if(p->position==99)
-// Snake99_19(p);
-// if(p->position==66)
-// Snake66_17(p);
+if(p->position==99)
+Snake99_19(p);
+if(p->position==66)
+Snake66_17(p);
 if(p->position==49)
 Snake49_31(p);
 if(p->position==73)
@@ -417,29 +438,177 @@ moderP1*=-1;
 
 
 }
-int Ladder73_94()// up and left
+int Ladder73_94(player *p)// up and left
 {
-for(int i=0;i<6;i++)
+   p->x=p->x+3;
+  for(int i=0;i<6;i++)
 {
 
+  grid[--p->y][--p->x]='p';
+  grid[p->y+1][p->x+1]='-';
+
+printGrid();
 }
+p->position=63;
+p->x=37;
+p->y=2;
+grid[2][37]='p';
+
 }
-int Ladder25_63()// up and left
+
+int Ladder25_63(player *p)// up and left
 {
+  p->x=p->x+4;
   for(int i=0;i<12;i++)
 {
 
+  grid[--p->y][--p->x]='p';
+  grid[p->y+1][p->x+1]='-';
+
+printGrid();
 }
+p->position=63;
+p->x=13;
+p->y=11;
+grid[11][13]='p';
+// moderP1*=-1;
 
 }
-int Ladder6_53()// up and right
+
+
+
+int Ladder6_53(player *p)// up and right
 {
+  // p->x=p->x+3;
 for(int i=0;i<15;i++)
 {
 
+  grid[--p->y][++p->x]='p';
+  grid[p->y+1][p->x-1]='-';
+
+printGrid();
 }
+p->position=53;
+p->x=43;
+p->y=14;
+grid[20][55]='p';
+moderP1*=-1;
+
 }
 
 
-int animate(int direction,player p)
-{}
+
+int animation(int dieFlag)
+{
+    FILE *fh;
+  
+    fh=fopen("frame1.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame2.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame3.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame4.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame5.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame6.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame7.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame8.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frame1.txt","r");
+    printDie(fh);
+    fh=fopen("frameClear.txt","r");
+      printDieClear(fh);
+    fh=fopen("frameClear.txt","r");
+    printDieClear(fh);
+    if(dieFlag==1)
+    { 
+            fh=fopen("frame_1onD.txt","r");
+      printDie(fh);
+    }
+    if(dieFlag==2)
+    {
+      
+      fh=fopen("frame_2onD.txt","r");
+      printDie(fh);
+    }
+    if(dieFlag==3)
+    {
+      
+      fh=fopen("frame_3onD.txt","r");
+      printDie(fh);
+    }
+    if(dieFlag==4)
+    {
+      
+      fh=fopen("frame_4onD.txt","r");
+      printDie(fh);
+    }
+    if(dieFlag==5)
+    {
+      
+      fh=fopen("frame_5onD.txt","r");
+      printDie(fh);
+    }
+    if(dieFlag==6)
+    {
+      
+      fh=fopen("frame_6onD.txt","r");
+      printDie(fh);
+    }
+
+}
+
+
+void printDie(FILE *fh)
+{
+  printGridFaster();
+  if(fh!=NULL)
+  {
+    char c;
+    while((c=fgetc(fh))!=EOF)
+    putchar(c);
+    fclose(fh);
+    usleep(100000);
+  }else
+  {
+    printf("error opening file");
+  }
+    return;
+}
+
+
+void printDieClear(FILE *fh)
+{
+  printGridFaster();
+  if(fh!=NULL)
+  {
+    char c;
+    while((c=fgetc(fh))!=EOF)
+    putchar(c);
+    fclose(fh);
+  }else
+  {
+    printf("error opening file");
+  }
+    return;
+}

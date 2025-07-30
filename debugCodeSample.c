@@ -54,17 +54,17 @@ char grid[31][61]=
 "| 60  \\ \\ 59|   58\\-\\57 |   56|/ /  |   54| 53  |   52|   51|",
 "|     /0/   |     |\\-\\  |     ( ) 55|     |  /-/|     |     |",
 "------\\ \\-----------\\-\\------/ /------------/-/--------------",
-"| 41  /0/ 42|   43|  \\-\\|45 ( )   46|   47|/-/48|49  M|   50|",
-"|     \\ \\   |     | 44\\-\\  / /|     |     /-/   |  [' ']    |",
-"------/0/--------------\\-\\( )------------/-/--------\\ \\------",
-"| 40  \\ \\ 39|   38|   37\\/ /36|   35| 34/-/   33|  32\\ \\  31|",
-"|     /0/   |     |     ( )\\  |     |  /-/|     |     \\     |",
+"| 41  /0/ 42|   43|  \\-\\|45 ( )   46|   47|/-/48|49 M |   50|",
+"|     \\ \\   |     | 44\\-\\  / /|     |     /-/   | [' ']     |",
+"------/0/--------------\\-\\( )------------/-/-------\\ \\-------",
+"| 40  \\ \\ 39|   38|   37\\/ /36|   35| 34/-/   33| 32\\ \\  31|",
+"|     /0/   |     |     ( )\\  |     |  /-/|     |    \\     |",
 "------\\ \\--------------/ /\\-\\---------/-/--------------------",
 "| 21  /0/ 22|   23| 22( )25\\-\\|   26|/-/27|   28|   29|   30|",
 "|     \\ \\   |     |  / /|     |     /-/   |     |     |     |",
 "------/0/-----------( )------------/-/-----------------------",
 "| 20  \\ \\ 19|   18|   17|   16|15 /-/   14|   13|   12|   11|",
-"|     |     |     |     |     |  /-/|     |     |     |     |",
+"|     |     |     |     |     |  /-/|     |     |     |cd   |",
 "--------------------------------/-/--------------------------",
 "|    1|    2|    3|    4|    5|/-/ 6|    7|    8|    9|   10|",
 "|p1 p2|     |     |     |     |     |     |     |     |     |",
@@ -150,9 +150,8 @@ if(player==1)
         
         
         //return
-        if(dodgeSnLflag=1)
-        
-        snakeandladdercheck(&p1);
+        if(dodgeSnLflag==1)
+        {snakeandladdercheck(&p1);}
         return 1;
         }}
 else 
@@ -234,11 +233,13 @@ if(player==-1)// this line executes algo for player two when the flag is -1, whi
 
 int SkeletalAlgorithm() {
   printf("press enter to start");
-  while (p1.position <= 99 || p2.position <= 99) {
-    clear();
-    printGrid();
-    int dieResult = diceRoll();
-    animation(dieResult);
+  while (p1.position <= 99 && p2.position <= 99) {
+    // clear();
+    getchar();
+        printGrid();
+    // int dieResult = diceRoll();
+    int dieResult=1;
+    // animation(dieResult);
 
 
 
@@ -247,6 +248,7 @@ int SkeletalAlgorithm() {
       // move(playerFlag);
       move(playerFlag,0), move(playerFlag,0), move(playerFlag,0), move(playerFlag,0),
           move(playerFlag,0), move(playerFlag,1);
+
       continue;
       
       
@@ -278,7 +280,8 @@ int SkeletalAlgorithm() {
         move(playerFlag,0);
         move(playerFlag,1);
       }
-      playerFlag *= -1;
+      //to be changed to -1 for making p2 work
+      playerFlag *= 1;
     }
   }
 }
@@ -368,16 +371,16 @@ int diceRoll()
 
 int snakeandladdercheck(player *p)
 {
-if(p->position==99)
-Snake99_19(p);
-if(p->position==66)
-Snake66_17(p);
-if(p->position==49)
-Snake49_31(p);
-if(p->position==73)
-Ladder73_94(p);
-if(p->position==25)
-Ladder25_63(p);
+if(p->position==99);
+// Snake99_19(p);
+if(p->position==66);
+// Snake66_17(p);
+if(p->position==49);
+// Snake49_31(p);
+// if(p->position==73)
+// Ladder73_94(p);
+// if(p->position==25)
+// Ladder25_63(p);
 if(p->position==6)
 Ladder6_53(p);
 }
@@ -440,177 +443,259 @@ moderP1*=-1;
 
 
 }
-int Ladder73_94(player *p)// up and left
-{
-   p->x=p->x+3;
-  for(int i=0;i<6;i++)
-{
 
-  grid[--p->y][--p->x]='p';
-  grid[p->y+1][p->x+1]='-';
+// int Ladder73_94(player *p)// up and left
+// {
+//    p->x=p->x+3;
+//   for(int i=0;i<6;i++)
+// {
 
-printGrid();
-}
-p->position=63;
-p->x=37;
-p->y=2;
-grid[2][37]='p';
+//   grid[--p->y][--p->x]='p';
+//   grid[p->y+1][p->x+1]='-';
 
-}
+// printGrid();
+// }
+// p->position=63;
+// p->x=37;
+// p->y=2;
+// grid[2][37]='p';
 
-int Ladder25_63(player *p)// up and left
-{
-  p->x=p->x+4;
-  for(int i=0;i<12;i++)
-{
+// }
 
-  grid[--p->y][--p->x]='p';
-  grid[p->y+1][p->x+1]='-';
+// int Ladder25_63(player *p)// up and left
+// {
+//   p->x=p->x+4;
+//   for(int i=0;i<12;i++)
+// {
 
-printGrid();
-}
-p->position=63;
-p->x=13;
-p->y=11;
-grid[11][13]='p';
+//   grid[--p->y][--p->x]='p';
+//   grid[p->y+1][p->x+1]='-';
+
+// printGrid();
+// }
+// p->position=63;
+// p->x=13;
+// p->y=11;
+// grid[11][13]='p';
+// // moderP1*=-1;
+
+// }
+
+
+
+// int Ladder6_53(player *p)// up and right
+// {
+//   // p->x=p->x+3;
+// for(int i=0;i<15;i++)
+// {
+
+//   grid[--p->y][++p->x]='p';
+//   grid[p->y+1][p->x-1]='-';
+
+// printGrid();
+// }
+// p->position=53;
+// p->x=43;
+// p->y=14;
+// grid[20][55]='p';
 // moderP1*=-1;
 
+// }
+/* ===== Ladder 6 → 53 ===== */
+int Ladder6_53(player *p)            // up and right
+{
+    for (int i = 0; i < 15; i++) {
+        grid[--p->y][++p->x] = 'p';
+        grid[29][32]=' ';
+        grid[29][31] = ' ';
+
+        grid[p->y + 1][p->x - 1] = '-';
+        printGrid();
+    }
+    p->position = 53;
+    p->x = 43;
+    p->y = 14;
+    grid[20][55] = ' ';
+    moderP1 *= -1;
+
+    /* new cleanup lines */
+    grid[29][31] = ' ';
+    grid[29][32] = ' ';
+    grid[14][46] = '-';
+    grid[14][43] = 'p';
+    grid[14][44] = '1';
+
+    printGrid();
 }
 
-
-
-int Ladder6_53(player *p)// up and right
+/* ===== Ladder 25 → 63 ===== */
+int Ladder25_63(player *p)           // up and left
 {
-  // p->x=p->x+3;
-for(int i=0;i<15;i++)
+    p->x = p->x + 4;
+    for (int i = 0; i < 12; i++) {
+        grid[--p->y][--p->x] = 'p';
+        grid[p->y + 1][p->x + 1] = '-';
+        printGrid();
+    }
+    p->position = 63;
+    p->x = 13;
+    p->y = 11;
+    grid[11][13] = 'p';
+
+    /* new cleanup lines */
+    grid[23][25] = ' ';
+    grid[23][26] = ' ';
+    grid[23][28] = '2';
+    grid[23][29] = '5';
+    grid[11][17] = '-';
+    grid[11][13] = 'P';
+    grid[11][14] = '1';
+    grid[19][25] = '\\';
+    grid[20][26] = ')';
+    printGrid();
+
+  }
+
+/* ===== Ladder 73 → 94 ===== */
+int Ladder73_94(player *p)           // up and left
 {
+    p->x = p->x + 3;
+    for (int i = 0; i < 6; i++) {
+        grid[--p->y][--p->x] = 'p';
+        grid[p->y + 1][p->x + 1] = '-';
+        printGrid();
+    }
+    p->position = 63;
+    p->x = 37;
+    p->y = 2;
+    grid[2][37] = 'p';
 
-  grid[--p->y][++p->x]='p';
-  grid[p->y+1][p->x-1]='-';
-
-printGrid();
-}
-p->position=53;
-p->x=43;
-p->y=14;
-grid[20][55]='p';
-moderP1*=-1;
-
-}
+    /* new cleanup lines */
+    grid[9][43] = ' ';
+    grid[9][44] = ' ';
+    grid[2][40] = '-';
+    grid[2][37] = 'P';
+    grid[2][38] = '1';
+    printGrid();
+  }
 
 
+// commented for debugging and removing dice animation
 
-int animation(int dieFlag)
-{
-    FILE *fh;
+// int animation(int dieFlag)
+// {
+//     FILE *fh;
   
-    fh=fopen("frame1.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame2.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame3.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame4.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame5.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame6.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame7.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame8.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frame1.txt","r");
-    printDie(fh);
-    fh=fopen("frameClear.txt","r");
-      printDieClear(fh);
-    fh=fopen("frameClear.txt","r");
-    printDieClear(fh);
-    if(dieFlag==1)
-    { 
-            fh=fopen("frame_1onD.txt","r");
-      printDie(fh);
-    }
-    if(dieFlag==2)
-    {
+//     fh=fopen("frame1.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame2.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame3.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame4.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame5.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame6.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame7.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame8.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frame1.txt","r");
+//     printDie(fh);
+//     fh=fopen("frameClear.txt","r");
+//       printDieClear(fh);
+//     fh=fopen("frameClear.txt","r");
+//     printDieClear(fh);
+//     if(dieFlag==1)
+//     { 
+//             fh=fopen("frame_1onD.txt","r");
+//       printDie(fh);
+//     }
+//     if(dieFlag==2)
+//     {
       
-      fh=fopen("frame_2onD.txt","r");
-      printDie(fh);
-    }
-    if(dieFlag==3)
-    {
+//       fh=fopen("frame_2onD.txt","r");
+//       printDie(fh);
+//     }
+//     if(dieFlag==3)
+//     {
       
-      fh=fopen("frame_3onD.txt","r");
-      printDie(fh);
-    }
-    if(dieFlag==4)
-    {
+//       fh=fopen("frame_3onD.txt","r");
+//       printDie(fh);
+//     }
+//     if(dieFlag==4)
+//     {
       
-      fh=fopen("frame_4onD.txt","r");
-      printDie(fh);
-    }
-    if(dieFlag==5)
-    {
+//       fh=fopen("frame_4onD.txt","r");
+//       printDie(fh);
+//     }
+//     if(dieFlag==5)
+//     {
       
-      fh=fopen("frame_5onD.txt","r");
-      printDie(fh);
-    }
-    if(dieFlag==6)
-    {
+//       fh=fopen("frame_5onD.txt","r");
+//       printDie(fh);
+//     }
+//     if(dieFlag==6)
+//     {
       
-      fh=fopen("frame_6onD.txt","r");
-      printDie(fh);
-    }
+//       fh=fopen("frame_6onD.txt","r");
+//       printDie(fh);
+//     }
 
-}
-
-
-void printDie(FILE *fh)
-{
-  printGridFaster();
-  if(fh!=NULL)
-  {
-    char c;
-    while((c=fgetc(fh))!=EOF)
-    putchar(c);
-    fclose(fh);
-    usleep(100000);
-  }else
-  {
-    printf("error opening file");
-  }
-    return;
-}
+// }
 
 
-void printDieClear(FILE *fh)
-{
-  printGridFaster();
-  if(fh!=NULL)
-  {
-    char c;
-    while((c=fgetc(fh))!=EOF)
-    putchar(c);
-    fclose(fh);
-  }else
-  {
-    printf("error opening file");
-  }
-    return;
-}
+// void printDie(FILE *fh)
+// {
+//   printGridFaster();
+//   if(fh!=NULL)
+//   {
+//     char c;
+//     while((c=fgetc(fh))!=EOF)
+//     putchar(c);
+//     fclose(fh);
+//     usleep(100000);
+//   }else
+//   {
+//     printf("error opening file");
+//   }
+//     return;
+// }
+
+
+// void printDieClear(FILE *fh)
+// {
+//   printGridFaster();
+//   if(fh!=NULL)
+//   {
+//     char c;
+//     while((c=fgetc(fh))!=EOF)
+//     putchar(c);
+//     fclose(fh);
+//   }else
+//   {
+//     printf("error opening file");
+//   }
+//     return;
+// }
+
+
+// dogeSnLflag was a == and = issue
